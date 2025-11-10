@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="header">
+        <h1>Панель управления</h1>
+        <div class="header-actions">
+            <a href="{{ url_for('add_workout') }}" class="btn-primary">➕ Добавить тренировку</a>
+            <a href="{{ url_for('add_goal') }}" class="btn-secondary">🎯 Добавить цель</a>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Тренировок за неделю</h3>
+            <div class="stat-number">{{ week_workouts_count }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Всего тренировок</h3>
+            <div class="stat-number">{{ workouts|length }}</div>
+        </div>
+        <div class="stat-card">
+            <h3>Активных целей</h3>
+            <div class="stat-number">{{ goals|length }}</div>
+        </div>
+    </div>
+
+    <!-- Блок целей -->
+    <div class="goals-section">
+        <h2>Мои цели</h2>
+        {% if goals %}
+            <div class="goals-grid">
+                {% for goal in goals %}
+                <div class="goal-card {% if goal.is_completed %}completed{% endif %}">
+                    <!-- Кнопка удаления - ВСЕГДА В ПРАВОМ ВЕРХНЕМ УГЛУ -->
+                    <a href="{{ url_for('delete_goal', goal_id=goal.id) }}" class="delete-goal-btn" onclick="return confirm('Вы уверены, что хотите удалить эту цель?')">×</a>
+                    
+                    <div class="goal-header">
+                        <h4>{{ goal.exercise_type }}</h4>
+                        <div class="goal-header-info">
+                            <span class="goal-deadline">до {{ goal.target_date.strftime('%d.%m.%Y') }}</span>
+                        </div>
+                    </div>
+                    <div class="goal-details">
+                        <div class="goal-target">
+                            <strong>Цель:</strong> {{ goal.target_weight }}кг × {{ goal.target_reps }}повт. × {{ goal.target_sets }}подх.
+                        </div>
+                        {% if goal.current_weight and goal.current_weight > 0 %}
+                        <div class="goal-current">
+                            <strong>Текущий:</strong> {{ goal.current_weight }}кг × {{ goal.current_reps }}повт. × {{ goal.current_sets }}подх.
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="goal-progress">
+                        <div class="progress-text">
+                            Прогресс: {{ "%.1f"|format(goal.progress_percentage) }}%
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ goal.progress_percentage }}%;"></div>
+                        </div>
+                    </div>
+                    <div class="goal-actions">
+                        <a href="{{ url_for('update_progress', goal_id=goal.id) }}" class="btn-small">
+                            🔄 Обновить
+                        </a>
+                    </div>
+                    {% if goal.is_completed %}
+                    <div class="goal-completed">🎉 Цель достигнута!</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-data">Целей пока нет. <a href="{{ url_for('add_goal') }}">Добавьте первую цель!</a></p>
+        {% endif %}
+    </div>
+
+    <!-- Последние тренировки -->
+    <div class="workout-list">
+        <h2>Последние тренировки</h2>
+        {% if workouts %}
+            {% for workout in workouts %}
+            <div class="workout-item">
+                <div class="workout-date">{{ workout.date.strftime('%d.%m.%Y') }}</div>
+                <div class="workout-details">
+                    <span class="exercise">{{ workout.exercise_type }}</span>
+                    <span class="weight">{{ workout.weight }} кг</span>
+                    <span class="reps">{{ workout.reps }} повт.</span>
+                    <span class="sets">{{ workout.sets }} подх.</span>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-data">Тренировок пока нет. <a href="{{ url_for('add_workout') }}">Добавьте первую тренировку!</a></p>
+        {% endif %}
+    </div>
+
+    <!-- График прогресса -->
+    <div class="charts-section">
+        <h2>Прогресс по весу</h2>
+        <div class="chart-container">
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressData = {{ progress_data | safe }};
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    
+    const datasets = [];
+    const colors = ['#333', '#666', '#999', '#ccc', '#555', '#777'];
+    
+    let colorIndex = 0;
+    for (const [exercise, data] of Object.entries(progressData)) {
+        if (data.dates.length > 0) {
+            datasets.push({
+                label: exercise,
+                data: data.weights,
+                borderColor: colors[colorIndex % colors.length],
+                backgroundColor: colors[colorIndex % colors.length] + '20',
+                tension: 0.1,
+                fill: false
+            });
+            colorIndex++;
+        }
+    }
+    
+    if (datasets.length > 0) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: progressData[Object.keys(progressData)[0]]?.dates || [],
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Вес (кг)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Дата'
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        document.querySelector('.chart-container').innerHTML = '<p class="no-data">Нет данных для построения графика</p>';
+    }
+});
+</script>
+{% endblock %}

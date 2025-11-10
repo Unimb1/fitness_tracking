@@ -1,0 +1,64 @@
+<!-- templates/add_workout.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Добавить новую тренировку</h2>
+    <form method="POST" class="workout-form">
+        <div class="form-group">
+            <label for="date">Дата:</label>
+            <input type="date" id="date" name="date" value="{{ today }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="exercise_type">Упражнение:</label>
+            <select id="exercise_type" name="exercise_type" required>
+                <option value="">Выберите упражнение</option>
+                <option value="Жим лежа">Жим лежа</option>
+                <option value="Сведение рук в кроссовере на грудь">Сведение рук в кроссовере на грудь</option>
+                <option value="Разгибания на трицепс с канатной рукоятью в кроссовере">Разгибания на трицепс с канатной рукоятью в кроссовере</option>
+                <option value="Сгибания на бицепс в РТ">Сгибания на бицепс в РТ</option>
+                <option value="Подъем на бицепс штанги обратным хватом">Подъем на бицепс штанги обратным хватом</option>
+                <option value="Ягодичный мост в РТ">Ягодичный мост в РТ</option>
+                <option value="Разгибание голени в БТ">Разгибание голени в БТ</option>
+                <option value="Сгибание голени в БТ">Сгибание голени в БТ</option>
+                <option value="Икроножные в Т">Икроножные в Т</option>
+                <option value="Вращения гантелей в согнутых руках">Вращения гантелей в согнутых руках</option>
+                <option value="Вертикальная тяга сидя">Вертикальная тяга сидя</option>
+                <option value="Горизонтальная тяга">Горизонтальная тяга</option>
+                <option value="Экстензия">Экстензия</option>
+                <option value="Сгибания в предплечьях">Сгибания в предплечьях</option>
+                <option value="Работа с гирей на предплечья">Работа с гирей на предплечья</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="weight">Вес (кг):</label>
+                <input type="number" id="weight" name="weight" step="0.5" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reps">Повторения:</label>
+                <input type="number" id="reps" name="reps" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sets">Подходы:</label>
+                <input type="number" id="sets" name="sets" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Сохранить тренировку</button>
+    </form>
+
+    <div class="abbreviations-info">
+        <h3>Пояснения к аббревиатурам:</h3>
+        <ul>
+            <li><strong>БТ</strong> - Блочный тренажер</li>
+            <li><strong>Т</strong> - Тренажер</li>
+            <li><strong>РТ</strong> - Рычажный тренажер</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

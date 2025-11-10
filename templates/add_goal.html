@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Добавить новую цель</h2>
+    <form method="POST" class="goal-form">
+        <div class="form-group">
+            <label for="exercise_type">Упражнение:</label>
+            <select id="exercise_type" name="exercise_type" required>
+                <option value="">Выберите упражнение</option>
+                <option value="Жим лежа">Жим лежа</option>
+                <option value="Сведение рук в кроссовере на грудь">Сведение рук в кроссовере на грудь</option>
+                <option value="Разгибания на трицепс с канатной рукоятью в кроссовере">Разгибания на трицепс с канатной рукоятью в кроссовере</option>
+                <option value="Сгибания на бицепс в РТ">Сгибания на бицепс в РТ</option>
+                <option value="Подъем на бицепс штанги обратным хватом">Подъем на бицепс штанги обратным хватом</option>
+                <option value="Ягодичный мост в РТ">Ягодичный мост в РТ</option>
+                <option value="Разгибание голени в БТ">Разгибание голени в БТ</option>
+                <option value="Сгибание голени в БТ">Сгибание голени в БТ</option>
+                <option value="Икроножные в Т">Икроножные в Т</option>
+                <option value="Вращения гантелей в согнутых руках">Вращения гантелей в согнутых руках</option>
+                <option value="Вертикальная тяга сидя">Вертикальная тяга сидя</option>
+                <option value="Горизонтальная тяга">Горизонтальная тяга</option>
+                <option value="Экстензия">Экстензия</option>
+                <option value="Сгибания в предплечьях">Сгибания в предплечьях</option>
+                <option value="Работа с гирей на предплечья">Работа с гирей на предплечья</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="target_weight">Целевой вес (кг):</label>
+                <input type="number" id="target_weight" name="target_weight" step="0.5" required>
+            </div>
+
+            <div class="form-group">
+                <label for="target_reps">Целевые повторения:</label>
+                <input type="number" id="target_reps" name="target_reps" value="8" min="1" max="20" required>
+            </div>
+
+            <div class="form-group">
+                <label for="target_sets">Целевые подходы:</label>
+                <input type="number" id="target_sets" name="target_sets" value="3" min="1" max="10" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="target_date">Целевая дата:</label>
+            <input type="date" id="target_date" name="target_date" required>
+        </div>
+
+        <button type="submit" class="btn-primary">Сохранить цель</button>
+    </form>
+
+    <div class="abbreviations-info">
+        <h3>Пояснения к аббревиатурам:</h3>
+        <ul>
+            <li><strong>БТ</strong> - Блочный тренажер</li>
+            <li><strong>Т</strong> - Тренажер</li>
+            <li><strong>РТ</strong> - Рычажный тренажер</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

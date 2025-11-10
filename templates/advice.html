@@ -1,0 +1,505 @@
+<!-- templates/advice.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="advice-page">
+    <div class="header">
+        <h2>Советы и Аналитика</h2>
+        <p>Научно обоснованные расчеты и аналитика вашего прогресса</p>
+    </div>
+
+    <div class="advice-grid">
+        <!-- Калькулятор прогрессии -->
+        <div class="advice-card">
+            <h3>🎯 Калькулятор прогрессии</h3>
+            <p>Рассчитайте, за сколько времени достигнете целевого веса</p>
+            
+            <form id="progression-form" class="calculator-form">
+                <div class="form-group">
+                    <label for="progression-exercise">Упражнение:</label>
+                    <select id="progression-exercise" name="exercise_type" required>
+                        <option value="">Выберите упражнение</option>
+                        <option value="Жим лежа">Жим лежа</option>
+                        <option value="Сведение рук в кроссовере на грудь">Сведение рук в кроссовере на грудь</option>
+                        <option value="Разгибания на трицепс с канатной рукоятью в кроссовере">Разгибания на трицепс с канатной рукоятью в кроссовере</option>
+                        <option value="Сгибания на бицепс в РТ">Сгибания на бицепс в РТ</option>
+                        <option value="Подъем на бицепс штанги обратным хватом">Подъем на бицепс штанги обратным хватом</option>
+                        <option value="Ягодичный мост в РТ">Ягодичный мост в РТ</option>
+                        <option value="Разгибание голени в БТ">Разгибание голени в БТ</option>
+                        <option value="Сгибание голени в БТ">Сгибание голени в БТ</option>
+                        <option value="Икроножные в Т">Икроножные в Т</option>
+                        <option value="Вращения гантелей в согнутых руках">Вращения гантелей в согнутых руках</option>
+                        <option value="Вертикальная тяга сидя">Вертикальная тяга сидя</option>
+                        <option value="Горизонтальная тяга">Горизонтальная тяга</option>
+                        <option value="Экстензия">Экстензия</option>
+                        <option value="Сгибания в предплечьях">Сгибания в предплечьях</option>
+                        <option value="Работа с гирей на предплечья">Работа с гирей на предплечья</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="current-weight">Текущий вес (кг):</label>
+                        <input type="number" id="current-weight" name="current_weight" step="0.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="target-weight">Целевой вес (кг):</label>
+                        <input type="number" id="target-weight" name="target_weight" step="0.5" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="frequency">Тренировок в неделю:</label>
+                    <select id="frequency" name="frequency">
+                        <option value="1">1 раз</option>
+                        <option value="2" selected>2 раза</option>
+                        <option value="3">3 раза</option>
+                        <option value="4">4+ раз</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-primary">Рассчитать прогрессию</button>
+            </form>
+
+            <div id="progression-result" class="result-container" style="display: none;">
+                <h4>Результаты расчета:</h4>
+                <div class="result-item">
+                    <strong>Оценка времени:</strong> 
+                    <span id="estimated-time"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Рекомендации:</strong> 
+                    <span id="recommendations"></span>
+                </div>
+                <div id="progression-chart-container">
+                    <canvas id="progressionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Калькулятор калорий -->
+        <div class="advice-card">
+            <h3>🔥 Калькулятор калорий</h3>
+            <p>Рассчитайте расход калорий для каждого упражнения</p>
+            
+            <form id="calories-form" class="calculator-form">
+                <div class="form-group">
+                    <label for="calories-exercise">Упражнение:</label>
+                    <select id="calories-exercise" name="exercise_type" required>
+                        <option value="">Выберите упражнение</option>
+                        <option value="Жим лежа">Жим лежа</option>
+                        <option value="Сведение рук в кроссовере на грудь">Сведение рук в кроссовере на грудь</option>
+                        <option value="Разгибания на трицепс с канатной рукоятью в кроссовере">Разгибания на трицепс с канатной рукоятью в кроссовере</option>
+                        <option value="Сгибания на бицепс в РТ">Сгибания на бицепс в РТ</option>
+                        <option value="Подъем на бицепс штанги обратным хватом">Подъем на бицепс штанги обратным хватом</option>
+                        <option value="Ягодичный мост в РТ">Ягодичный мост в РТ</option>
+                        <option value="Разгибание голени в БТ">Разгибание голени в БТ</option>
+                        <option value="Сгибание голени в БТ">Сгибание голени в БТ</option>
+                        <option value="Икроножные в Т">Икроножные в Т</option>
+                        <option value="Вращения гантелей в согнутых руках">Вращения гантелей в согнутых руках</option>
+                        <option value="Вертикальная тяга сидя">Вертикальная тяга сидя</option>
+                        <option value="Горизонтальная тяга">Горизонтальная тяга</option>
+                        <option value="Экстензия">Экстензия</option>
+                        <option value="Сгибания в предплечьях">Сгибания в предплечьях</option>
+                        <option value="Работа с гирей на предплечья">Работа с гирей на предплечья</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="duration">Длительность (минут):</label>
+                        <input type="number" id="duration" name="duration" value="60" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-weight">Ваш вес (кг):</label>
+                        <input type="number" id="user-weight" name="user_weight" value="70" step="0.5" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Рассчитать калории</button>
+            </form>
+
+            <div id="calories-result" class="result-container" style="display: none;">
+                <h4>Результаты расчета:</h4>
+                <div class="result-item">
+                    <strong>Сожжено калорий:</strong> 
+                    <span id="calories-burned"></span>
+                </div>
+                <div class="result-item">
+                    <strong>MET значение:</strong> 
+                    <span id="met-value"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Эквивалент:</strong> 
+                    <span id="calories-equivalent"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика по периодам -->
+        <div class="advice-card">
+            <h3>📊 Статистика по периодам</h3>
+            <p>Анализ ваших тренировок за разные периоды времени</p>
+            
+            <div class="period-selector">
+                <button class="period-btn active" data-period="week">Неделя</button>
+                <button class="period-btn" data-period="month">Месяц</button>
+                <button class="period-btn" data-period="3months">3 месяца</button>
+            </div>
+
+            <div id="period-stats" class="stats-container">
+                <div class="loading">Загрузка статистики...</div>
+            </div>
+        </div>
+
+        <!-- Дашборды -->
+        <div class="advice-card">
+            <h3>📈 Дашборды</h3>
+            <p>Различные варианты визуализации вашего прогресса</p>
+            
+            <div class="dashboard-selector">
+                <select id="dashboard-select" class="dashboard-select">
+                    <option value="progress">Прогресс по весу</option>
+                    <option value="volume">Объем тренировок</option>
+                    <option value="frequency">Частота тренировок</option>
+                    <option value="distribution">Распределение по упражнениям</option>
+                </select>
+            </div>
+
+            <div id="dashboard-container" class="dashboard-container">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let progressionChart = null;
+    let dashboardChart = null;
+
+    // Калькулятор прогрессии
+    document.getElementById('progression-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {
+            exercise_type: formData.get('exercise_type'),
+            current_weight: parseFloat(formData.get('current_weight')),
+            target_weight: parseFloat(formData.get('target_weight')),
+            frequency: parseInt(formData.get('frequency'))
+        };
+
+        fetch('/api/calculate-progression', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            displayProgressionResult(result);
+        });
+    });
+
+    function displayProgressionResult(result) {
+        const resultDiv = document.getElementById('progression-result');
+        const estimatedTime = document.getElementById('estimated-time');
+        const recommendations = document.getElementById('recommendations');
+
+        estimatedTime.textContent = `${result.estimated_weeks} недель (${result.estimated_months} месяцев)`;
+        
+        let recText = '';
+        if (result.estimated_weeks <= 12) {
+            recText = 'Отличный темп! Продолжайте в том же духе.';
+        } else if (result.estimated_weeks <= 24) {
+            recText = 'Стабильный прогресс. Увеличьте частоту тренировок для ускорения.';
+        } else {
+            recText = 'Долгосрочная цель. Рекомендуется консультация тренера для оптимизации программы.';
+        }
+        
+        recommendations.textContent = recText;
+        resultDiv.style.display = 'block';
+
+        // Строим график прогрессии
+        buildProgressionChart(result);
+    }
+
+    function buildProgressionChart(result) {
+        const ctx = document.getElementById('progressionChart').getContext('2d');
+        
+        // Уничтожаем старый график если существует
+        if (progressionChart) {
+            progressionChart.destroy();
+        }
+        
+        const labels = result.progression_data.map(item => `Неделя ${item.week}`);
+        const weights = result.progression_data.map(item => item.weight);
+
+        progressionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: `Прогресс в ${result.exercise}`,
+                    data: weights,
+                    borderColor: '#333',
+                    tension: 0.1,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Вес (кг)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Недели'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Калькулятор калорий
+    document.getElementById('calories-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const data = {
+            exercise_type: formData.get('exercise_type'),
+            duration: parseInt(formData.get('duration')),
+            user_weight: parseFloat(formData.get('user_weight'))
+        };
+
+        fetch('/api/calculate-calories', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            displayCaloriesResult(result);
+        });
+    });
+
+    function displayCaloriesResult(result) {
+        const resultDiv = document.getElementById('calories-result');
+        const caloriesBurned = document.getElementById('calories-burned');
+        const metValue = document.getElementById('met-value');
+        const equivalent = document.getElementById('calories-equivalent');
+
+        caloriesBurned.textContent = `${result.calories_burned} ккал`;
+        metValue.textContent = result.met_value;
+        
+        // Сравнение с обычными активностями
+        let equivText = '';
+        if (result.calories_burned < 100) {
+            equivText = 'Примерно как 15 минут ходьбы';
+        } else if (result.calories_burned < 200) {
+            equivText = 'Примерно как 30 минут уборки';
+        } else {
+            equivText = 'Примерно как 45 минут плавания';
+        }
+        
+        equivalent.textContent = equivText;
+        resultDiv.style.display = 'block';
+    }
+
+    // Статистика по периодам
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            loadPeriodStats(this.dataset.period);
+        });
+    });
+
+    function loadPeriodStats(period) {
+        const statsContainer = document.getElementById('period-stats');
+        statsContainer.innerHTML = '<div class="loading">Загрузка статистики...</div>';
+
+        fetch(`/api/workout-stats/${period}`)
+            .then(response => response.json())
+            .then(stats => {
+                displayPeriodStats(stats);
+            });
+    }
+
+    function displayPeriodStats(stats) {
+        const statsContainer = document.getElementById('period-stats');
+        
+        let html = `
+            <div class="period-header">
+                <h4>Статистика за ${stats.period === 'week' ? 'неделю' : stats.period === 'month' ? 'месяц' : '3 месяца'}</h4>
+                <p>Всего тренировок: <strong>${stats.total_workouts}</strong></p>
+            </div>
+        `;
+
+        if (Object.keys(stats.exercise_stats).length > 0) {
+            html += '<div class="exercise-stats">';
+            for (const [exercise, data] of Object.entries(stats.exercise_stats)) {
+                html += `
+                    <div class="exercise-stat-item">
+                        <div class="exercise-name">${exercise}</div>
+                        <div class="exercise-data">
+                            <span>Тренировок: ${data.count}</span>
+                            <span>Макс. вес: ${data.max_weight}кг</span>
+                            <span>Объем: ${Math.round(data.total_volume)}кг</span>
+                        </div>
+                    </div>
+                `;
+            }
+            html += '</div>';
+        } else {
+            html += '<p class="no-data">Нет данных за выбранный период</p>';
+        }
+
+        statsContainer.innerHTML = html;
+    }
+
+    // Загрузка начальной статистики
+    loadPeriodStats('week');
+
+    // Дашборды
+    document.getElementById('dashboard-select').addEventListener('change', function() {
+        loadDashboard(this.value);
+    });
+
+    function loadDashboard(type) {
+        const ctx = document.getElementById('dashboardChart').getContext('2d');
+        
+        // Уничтожаем старый график если существует
+        if (dashboardChart) {
+            dashboardChart.destroy();
+        }
+        
+        // Загружаем реальные данные для разных типов дашбордов
+        fetch('/api/progress-data')
+            .then(response => response.json())
+            .then(data => {
+                buildDashboardChart(type, data, ctx);
+            });
+    }
+
+    function buildDashboardChart(type, data, ctx) {
+        let chartConfig = {};
+        
+        switch(type) {
+            case 'progress':
+                // График прогресса по весу
+                const datasets = [];
+                const colors = ['#333', '#666', '#999', '#ccc'];
+                
+                let i = 0;
+                for (const [exercise, exerciseData] of Object.entries(data)) {
+                    datasets.push({
+                        label: exercise,
+                        data: exerciseData.weights,
+                        borderColor: colors[i % colors.length],
+                        tension: 0.1,
+                        fill: false
+                    });
+                    i++;
+                }
+                
+                chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: datasets.length > 0 ? data[Object.keys(data)[0]].dates : [],
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Вес (кг)'
+                                }
+                            }
+                        }
+                    }
+                };
+                break;
+                
+            case 'volume':
+                // График объема тренировок
+                const volumeData = [];
+                const volumeLabels = [];
+                
+                for (const [exercise, exerciseData] of Object.entries(data)) {
+                    if (exerciseData.weights.length > 0) {
+                        volumeLabels.push(exercise);
+                        const lastWeight = exerciseData.weights[exerciseData.weights.length - 1];
+                        volumeData.push(lastWeight);
+                    }
+                }
+                
+                chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: volumeLabels,
+                        datasets: [{
+                            label: 'Текущий вес',
+                            data: volumeData,
+                            backgroundColor: '#333'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Вес (кг)'
+                                }
+                            }
+                        }
+                    }
+                };
+                break;
+                
+            default:
+                chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+                        datasets: [{
+                            label: 'Активность',
+                            data: [12, 19, 3, 5, 2, 3, 15],
+                            backgroundColor: '#333'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+        }
+        
+        dashboardChart = new Chart(ctx, chartConfig);
+    }
+
+    // Загрузка начального дашборда
+    loadDashboard('progress');
+</script>
+{% endblock %}
